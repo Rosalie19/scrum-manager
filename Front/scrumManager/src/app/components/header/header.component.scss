@@ -1,0 +1,26 @@
+.header-container{
+    width : 100vw;
+    padding-left: 40px;
+    padding-bottom: 10px;
+    box-shadow: 0 3px 0 black;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    gap : 20px
+}
+
+.tab{
+    width: max-content;
+    border-radius: 5px;
+    padding: 3px;
+    cursor:pointer
+}
+.tab:hover{
+    background-color:rgba(0, 0, 0, 0.26);
+    outline-style: none !important;
+}
+
+.tab.selected{
+    outline : #CCD5AE;
+    outline-style: dashed;
+}

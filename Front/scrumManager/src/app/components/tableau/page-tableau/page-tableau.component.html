@@ -1,0 +1,41 @@
+<app-header [currentPage]="'Tableau'"></app-header>
+<app-tableau-points class="tableau-points-container" [pointsList]="sumList" [totalPoints]="updateTotal(sumList)"></app-tableau-points>
+<div  class="tableau-colonne-container">
+    <div class="tableau-colonne ">
+        <h4 class="colonne-title">À faire</h4>
+        <div cdkDropList #todo="cdkDropList" [cdkDropListData]="columnList[0]" [cdkDropListConnectedTo]="[ progress, test, done]"
+            class="ticket-list" (cdkDropListDropped)="drop($event)">
+            <div  *ngFor="let item of columnList[0]" cdkDrag>
+                <app-tableau-ticket [ticketScrum]="item" class="ticket-container">
+            </app-tableau-ticket></div>
+        </div>
+    </div>
+
+    <div class="tableau-colonne">
+        <h4 class="colonne-title">En cours</h4>
+
+        <div cdkDropList #progress="cdkDropList" [cdkDropListData]="columnList[1]" [cdkDropListConnectedTo]="[todo, test, done]"
+            class="ticket-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of columnList[1]" cdkDrag><app-tableau-ticket [ticketScrum]="item" class="ticket-container">
+                </app-tableau-ticket></div>
+        </div>
+    </div>
+    <div class="tableau-colonne">
+        <h4 class="colonne-title">À tester</h4>
+
+        <div cdkDropList #test="cdkDropList" [cdkDropListData]="columnList[2]" [cdkDropListConnectedTo]="[todo, progress, done]"
+            class="ticket-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of columnList[2]" cdkDrag><app-tableau-ticket [ticketScrum]="item" class="ticket-container">
+            </app-tableau-ticket></div>
+        </div>
+    </div>
+    <div class="tableau-colonne">
+        <h4 class="colonne-title">Terminé</h4>
+
+        <div cdkDropList #done="cdkDropList" [cdkDropListData]="columnList[3]" [cdkDropListConnectedTo]="[todo, progress, test]"
+            class="ticket-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of columnList[3]" cdkDrag><app-tableau-ticket [ticketScrum]="item" class="ticket-container">
+            </app-tableau-ticket></div>
+        </div>
+    </div>
+</div>

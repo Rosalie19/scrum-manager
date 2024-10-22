@@ -1,0 +1,8 @@
+<div class="sprint-container">
+    <h3>{{ sprint.title }}</h3>
+    <div cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
+        [cdkDropListConnectedTo]="connectedDropLists"
+        id="sprint-{{ sprintIndex }}">
+        <app-backlog-ticket *ngFor="let ticket of sprint.tickets" [ticket]="ticket" cdkDrag></app-backlog-ticket>
+    </div>
+</div>

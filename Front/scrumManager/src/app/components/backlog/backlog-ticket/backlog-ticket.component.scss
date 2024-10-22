@@ -1,0 +1,8 @@
+@import '../../../../colors';
+
+.ticket-container{
+    padding: 5px;
+    background-color: $custom-primary;
+    margin: none;
+    outline: solid $custom-green 1px
+}

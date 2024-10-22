@@ -1,0 +1,41 @@
+@import '../../../../colors';
+
+.points-container{
+    box-shadow:  grey 2px 2px 15px -5px;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px
+}
+
+.points-item{
+    
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.points-number{
+    background-color: $custom-light;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    align-content: center;
+
+    &.last{
+        background-color: $custom-green; 
+        border-radius: 20px;
+        width: 80px;
+        height: 30px;
+        text-align: center;
+        align-content: center
+    }
+}
+
+.points-label{
+    font-size: 14px;
+    align-content: center
+}
+
