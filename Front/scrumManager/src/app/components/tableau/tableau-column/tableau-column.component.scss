@@ -1,0 +1,62 @@
+@import '../../../../colors';
+
+.tableau-colonne {
+    border-radius: 5px;
+    width: 22vw;
+    height: 70vh;
+    box-shadow: rgb(182, 182, 182) 2px 4px 20px -10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: $custom-light;
+  
+    &.last{
+      background-color: $custom-accent-light;
+    }
+  
+  }
+  
+  .colonne-title {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .ticket-container {
+    border-radius: 5px;
+    background-color: $custom-primary;
+    display: flex;
+    padding: 10px;
+    cursor: grab;
+  
+    &:hover {
+      outline-style: solid;
+      outline-width: 3px;
+      outline-color: $custom-dark
+    }
+  
+    ;
+  
+    &:active {
+      cursor: grabbing !important
+    }
+  }
+  
+  .ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100%;
+  }
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    cursor: grabbing !important;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  
+  }

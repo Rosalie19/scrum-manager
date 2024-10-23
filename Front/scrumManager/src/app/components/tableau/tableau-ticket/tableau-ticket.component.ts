@@ -8,5 +8,5 @@ import { TicketScrum } from '../../../models/ticket-scrum';
   styleUrl: './tableau-ticket.component.scss'
 })
 export class TableauTicketComponent {
-  @Input() ticketScrum!: TicketScrum;
+  @Input() ticket!: TicketScrum;
 }

@@ -1,8 +1,10 @@
+@import '../../../colors';
+
 .header-container{
     width : 100vw;
     padding-left: 40px;
     padding-bottom: 10px;
-    box-shadow: 0 3px 0 black;
+    box-shadow: 0 3px 0 $custom-dark;
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;
@@ -13,14 +15,15 @@
     width: max-content;
     border-radius: 5px;
     padding: 3px;
-    cursor:pointer
-}
-.tab:hover{
-    background-color:rgba(0, 0, 0, 0.26);
-    outline-style: none !important;
-}
+    cursor:pointer;
 
-.tab.selected{
-    outline : #CCD5AE;
-    outline-style: dashed;
+    &.selected{
+        outline : $custom-green;
+        outline-style: dashed;
+    }
+
+    &:hover{
+        outline : $custom-accent ;
+        outline-style: dashed;
+    }
 }

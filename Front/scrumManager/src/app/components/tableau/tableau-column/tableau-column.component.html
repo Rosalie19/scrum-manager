@@ -1,0 +1,12 @@
+<div class="tableau-colonne">
+    <h4 class="colonne-title">{{title}}</h4>
+    <div class="ticket-list" 
+        cdkDropList 
+        [cdkDropListData]="tickets" 
+        [cdkDropListConnectedTo]="connectedDropLists"
+        (cdkDropListDropped)="onDrop($event)" 
+        id="column-{{ columnIndex }}">
+        <app-tableau-ticket *ngFor="let item of tickets" [ticket]="item" class="ticket-container" cdkDrag>
+            </app-tableau-ticket>
+    </div>
+</div>

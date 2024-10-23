@@ -15,7 +15,7 @@ import { SprintService } from '../../../services/sprint.service';
   templateUrl: './page-backlog.component.html',
   styleUrl: './page-backlog.component.scss'
 })
-export class PageBacklogComponent implements OnInit{
+export class PageBacklogComponent implements OnInit {
   sprints!: Sprint[];
 
   constructor(private mySprintService: SprintService) { }
@@ -39,19 +39,29 @@ export class PageBacklogComponent implements OnInit{
         event.previousIndex,
         event.currentIndex
       );
+      this.updateSprints()
     }
   }
 
-  loadData(data: any){
-    this.sprints = [];
-    for (var sprint of data){
-      var ticketsList : TicketScrum[] = [];
-      for (var ticket of sprint.tickets){
-        ticketsList.push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
+  loadData(data: any) {
+    this.mySprintService.getAll().subscribe(response => {
+      this.sprints = [];
+      for (var sprint of data) {
+        var ticketsList: TicketScrum[] = [];
+        for (var ticket of sprint.tickets) {
+          ticketsList.push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
+        }
+        this.sprints.push(new Sprint(sprint.id, sprint.title, ticketsList))
       }
-      this.sprints.push(new Sprint(sprint.id, sprint.title, ticketsList))
+    })
+  }
+
+  updateSprints() {
+    for (var sprint of this.sprints) {
+      this.mySprintService.update(sprint.id, sprint)
     }
   }
+
 
   getConnectedDropLists(): string[] {
     return this.sprints.map((_, index) => `sprint-${index}`);

@@ -11,8 +11,11 @@
 .points-container{
     background-color: $custom-green;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    text-align: center
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 

@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../header/header.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TicketScrum } from '../../../models/ticket-scrum';
 import { TableauTicketComponent } from '../tableau-ticket/tableau-ticket.component';
+import { TableauColumnComponent } from '../tableau-column/tableau-column.component';
 import { NgForOf } from '@angular/common';
 import { TableauPointsComponent } from '../tableau-points/tableau-points.component';
 import { TicketService
 
  } from '../../../services/ticket.service';
+import { SprintService } from '../../../services/sprint.service';
+import { Sprint } from '../../../models/sprint';
 @Component({
   selector: 'app-page-tableau',
   standalone: true,
-  imports: [HeaderComponent, DragDropModule, TableauTicketComponent, TableauPointsComponent, NgForOf],
+  imports: [HeaderComponent, DragDropModule, TableauTicketComponent,TableauColumnComponent, TableauPointsComponent, NgForOf],
   templateUrl: './page-tableau.component.html',
   styleUrl: './page-tableau.component.scss'
 })
@@ -20,37 +23,38 @@ export class PageTableauComponent implements OnInit {
    * columnList TicketScrum[][] : array of the lists of tickets in each column 
    * sumList number[] : array of the sum of the tickets points in each column 
    */
-
-  constructor(private myTicketService: TicketService) { }
-  columnList: TicketScrum[][] = [[],[], [], []];
+  @Input() sprint_id: number  = 1;
+  constructor(private mySprintService: SprintService, private myTicketService: TicketService,) { }
+  columnList!: [string, TicketScrum[]][];
+  sprint : Sprint = new Sprint(0,"",[]);
   sumList: number[] = [0,0,0,0];
   ngOnInit() {
+    this.emptyColumns();
     this.loadData();
-    
-    //Initialize sums 
-    console.log(this.sumList);
   }
 
   /**
    * Drag and drop event manager 
    * @param event the drag and drop event 
    */
-  drop(event: CdkDragDrop<TicketScrum[]>) {
+  drop(event: CdkDragDrop<TicketScrum[]>, columnIndex: number) {
     const droppedTicket = event.previousContainer.data[event.previousIndex];
+    console.log(event.previousContainer.data)
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(this.columnList[columnIndex][1], event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(event.previousContainer.data,
+      transferArrayItem(
+        event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex);
+        event.currentIndex
+      );
       this.updateAllSums();
-      const containerIndex = this.columnList.findIndex(list => list === event.container.data);
+      const containerIndex = this.columnList.findIndex(list => list[1] === event.container.data);
       droppedTicket.status = containerIndex
       this.myTicketService.update(droppedTicket.id, droppedTicket).subscribe(response => {
         console.log(response)
       })
-      
     }
   }
 
@@ -58,8 +62,9 @@ export class PageTableauComponent implements OnInit {
    * Load tickets from db and update the columns
    */
   loadData() {
-    this.myTicketService.getAll().subscribe( response  => {
-      this.updateColumns(response)
+    this.mySprintService.get(this.sprint_id).subscribe( response  => {
+      this.sprint = response as Sprint;
+      this.updateColumns(this.sprint.tickets)
       this.updateAllSums();
     }, error => {
       console.error('Error fetching data', error);
@@ -72,14 +77,12 @@ export class PageTableauComponent implements OnInit {
    * @returns the total 
    * @test tested
    */
-  updateSum(ticketList: TicketScrum[]) {
+  updateSum(ticketList: TicketScrum[]) : number{
     //Initialize points 
     var total = 0;
-
     for (var ticket of ticketList) {
       total += ticket.points;
     }
-
     return total
   }
 
@@ -89,14 +92,19 @@ export class PageTableauComponent implements OnInit {
    */
   updateAllSums() {
     for (var i = 0; i < this.columnList.length; i++) {
-      this.sumList[i] = this.updateSum(this.columnList[i])
+      this.sumList[i] = this.updateSum(this.columnList[i][1])
     }
   }
 
+  /**
+   * Insert tickets in columns from http response data 
+   * @param ticketsList the object returned by the http request
+   * @test tested
+   */
   updateColumns(ticketsList : any){
-    this.columnList = [[], [], [], []]
+    this.emptyColumns();
     for (var ticket of ticketsList){
-      this.columnList[ticket.status].push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
+      this.columnList[ticket.status][1].push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
     }
   }
 
@@ -106,7 +114,7 @@ export class PageTableauComponent implements OnInit {
    * @returns total
    * @test tested
    */
-  updateTotal(sumList : number[]){
+  updateTotal(sumList : number[]) : number{
     // Initialize total 
     var total = 0;
     // Loop through the sums
@@ -114,6 +122,22 @@ export class PageTableauComponent implements OnInit {
       total += sumList[i]
     }
     return total
+  }
+
+  /**
+   * Empty columnList attribute
+   * @test tested
+   */
+  emptyColumns(){
+    this.columnList = [["À faire", []], ["En cours", []], ["À tester", []], ["Terminé", []]];
+  }
+
+  /**
+   * Get the ids of the other columns to enable drag and drop between them
+   * @returns a list of column names
+   */
+  getConnectedDropLists(): string[] {
+    return this.columnList.map((_, index) => `column-${index}`);
   }
 
 }
