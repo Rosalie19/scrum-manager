@@ -1,9 +1,11 @@
 <app-header [currentPage]="'Backlog'"></app-header>
-<div *ngFor="let sprint of sprints; let i = index">
-    <app-backlog-sprint
-      [sprint]="sprint"
-      [sprintIndex]="i"
-      [connectedDropLists]="getConnectedDropLists()"
-      (dropTicket)="drop($event, i)"
-    ></app-backlog-sprint>
+
+<input class="search-input" placeholder="Rechercher" [(ngModel)]="searchText" />
+<div class="body-container">
+  <div >
+    <app-backlog-sprint *ngFor="let sprint of sprints; let i = index" class="sprints-container" [searchText]="searchText" [sprint]="sprint" [sprintIndex]="i"
+      [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i)"></app-backlog-sprint>
   </div>
+
+  <app-backlog-detail-ticket class="ticket-detail-container"></app-backlog-detail-ticket>
+</div>

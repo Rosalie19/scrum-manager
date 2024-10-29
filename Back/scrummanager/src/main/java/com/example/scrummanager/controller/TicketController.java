@@ -80,7 +80,7 @@ public class TicketController {
     public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
         try {
             Ticket _ticket = ticketRepository
-                    .save(new Ticket(ticket.getTitle(), ticket.getPoints(), ticket.getStatus()));
+                    .save(new Ticket(ticket.getTitle(), ticket.getPoints(), ticket.getStatus(), ticket.getSprint()));
             return new ResponseEntity<>(_ticket, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -96,6 +96,7 @@ public class TicketController {
             _ticket.setTitle(ticket.getTitle());
             _ticket.setPoints(ticket.getPoints());
             _ticket.setStatus(ticket.getStatus());
+            _ticket.setSprint(ticket.getSprint());
             return new ResponseEntity<>(ticketRepository.save(_ticket), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

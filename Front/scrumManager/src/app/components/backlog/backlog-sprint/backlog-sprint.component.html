@@ -1,10 +1,19 @@
-<div class="sprint-container">
+<div class="sprint-container"   [ngClass]="{'backlog': sprint.title === 'Backlog'}" >
     <div class="top-container">
-        <div>{{ sprint.title }}</div>
+        <div class="sprint-title">{{ sprint.title }}</div>
+        <div> points</div>
     </div>
-    
     <div class="tickets-list" cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
         [cdkDropListConnectedTo]="connectedDropLists" id="sprint-{{ sprintIndex }}">
-        <app-backlog-ticket *ngFor="let ticket of sprint.tickets" [ticket]="ticket" cdkDrag></app-backlog-ticket>
+        <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket" cdkDrag></app-backlog-ticket>
+        
     </div>
+    <button class="add-ticket-button" onclick="addTicket()">
+        <div class="add-ticket-text">
+            + 
+        </div>
+        <div class="add-ticket-text">
+            Nouveau Ticket
+        </div>
+    </button>
 </div>

@@ -17,21 +17,22 @@
 }
 
 .points-number{
-    background-color: $custom-accent-light;
+    background-color: $custom-green-40;
     border-radius: 50%;
     width: 30px;
     height: 30px;
     text-align: center;
     align-content: center;
 
+    &.first{
+        background-color: $custom-primary; 
+        border: solid 2px $custom-dark;
+    }
+
     &.last{
-        background-color: $custom-accent; 
+        background-color: $custom-green; 
         border-radius: 20px;
         width: 80px;
-        height: 30px;
-        text-align: center;
-        align-content: center;
-        color: white
     }
 }
 

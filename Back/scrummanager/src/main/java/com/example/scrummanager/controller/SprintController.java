@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.scrummanager.model.Sprint;
+import com.example.scrummanager.model.Ticket;
 import com.example.scrummanager.repository.SprintRepository;
 
 
@@ -72,11 +73,23 @@ public class SprintController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/{id}/tickets")
+    public ResponseEntity<Sprint> addTicketToSprint(@PathVariable("id") long id, @RequestBody Ticket ticket) {
+        Optional<Sprint> sprintData = sprintRepository.findById(id);
+
+        if (sprintData.isPresent()) {
+            Sprint _sprint = sprintData.get();
+            _sprint.getTickets().add(ticket);  // Add the new ticket to the sprint
+            sprintRepository.save(_sprint);    // Save the updated sprint
+            return new ResponseEntity<>(_sprint, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+}
 
     @PutMapping("/{id}")
     public ResponseEntity<Sprint> updateSprint(@PathVariable("id") long id, @RequestBody Sprint sprint) {
         Optional<Sprint> sprintData = sprintRepository.findById(id);
-
         if (sprintData.isPresent()) {
             Sprint _sprint = sprintData.get();
             _sprint.setTitle(sprint.getTitle());

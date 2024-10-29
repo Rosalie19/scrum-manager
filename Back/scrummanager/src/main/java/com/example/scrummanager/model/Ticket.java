@@ -40,10 +40,11 @@ public class Ticket {
 
     }
 
-    public Ticket(String title, long points, long status) {
+    public Ticket(String title, long points, long status, Sprint sprint) {
         this.title = title;
         this.points = points;
         this.status = status;
+        this.sprint = sprint;
     }
 
     public long getId() {

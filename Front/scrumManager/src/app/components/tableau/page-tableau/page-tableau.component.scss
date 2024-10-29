@@ -19,6 +19,7 @@
   flex-direction: row;
   width: auto;
   justify-content: space-between;
+  gap: auto;
   margin: 20px;
 }
 
@@ -36,3 +37,4 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 
 }
+

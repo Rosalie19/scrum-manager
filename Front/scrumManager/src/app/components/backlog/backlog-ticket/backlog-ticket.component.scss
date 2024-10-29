@@ -3,6 +3,28 @@
 .ticket-container{
     padding: 5px;
     background-color: $custom-primary;
-    margin: none;
-    outline: solid $custom-green 1px
+    outline: solid $custom-green 1px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 10px;
+    align-items: center;
+}
+
+.points{
+    background-color: $custom-green-40;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    align-content: center;
+
+    &.todo{
+        background-color: $custom-primary;
+        border: solid 2px $custom-dark
+    }
+
+    &.done{
+        background-color: $custom-green;
+    }
 }

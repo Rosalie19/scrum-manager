@@ -1,0 +1,114 @@
+@import '../../../../colors';
+
+.top-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+
+    .ticket-number {
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .ticket-title {
+        font-size: 16px;
+        font-weight: 500;
+        border: none;
+
+        &:focus {
+            padding: 5px;
+            outline: solid 1px $custom-dark;
+            border-radius: 5px
+        }
+    }
+
+    .points-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        .points-number {
+            text-align: center;
+            border: none;
+            align-content: center;
+            font-size: 36px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: $custom-green;
+        }
+    }
+}
+
+.description-container {
+    width: inherit;
+    padding-right: 15px;
+
+    .description-title {
+        font-size: 14px;
+    }
+
+    .description-input {
+        width: 80%;
+        resize: none;
+        font-size: 12px;
+        border-radius: 5px;
+        border: solid 1px $custom-dark;
+        padding: 5px;
+    }
+}
+
+
+.states-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.sprints-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    justify-content: space-between;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    gap: 20px;
+
+    .delete-button {
+        border: solid 2px $custom-dark;
+        color: $custom-dark;
+        background-color: $custom-primary;
+        border-radius: 10px;
+        width: 100%;
+
+        &:hover {
+            color: $custom-primary;
+            background-color: $custom-dark;
+        }
+
+    }
+
+    .save-button {
+        border: solid 2px $custom-dark;
+        color: $custom-primary;
+        background-color: $custom-dark;
+        border-radius: 10px;
+        width: 100%;
+
+        &:hover {
+            color: $custom-dark;
+            background-color: $custom-primary;
+        }
+
+
+    }
+}
