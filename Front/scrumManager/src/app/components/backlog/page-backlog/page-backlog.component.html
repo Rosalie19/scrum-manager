@@ -2,10 +2,10 @@
 
 <input class="search-input" placeholder="Rechercher" [(ngModel)]="searchText" />
 <div class="body-container">
-  <div >
-    <app-backlog-sprint *ngFor="let sprint of sprints; let i = index" class="sprints-container" [searchText]="searchText" [sprint]="sprint" [sprintIndex]="i"
-      [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i)"></app-backlog-sprint>
+  <div class="sprints-container">
+    <app-backlog-sprint *ngFor="let sprint of sprints; let i = index"  [searchText]="searchText" [sprint]="sprint" [sprintIndex]="i"
+      [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i)" (clickedTicket)="openDetails($event)"></app-backlog-sprint>
   </div>
 
-  <app-backlog-detail-ticket class="ticket-detail-container"></app-backlog-detail-ticket>
+  <app-backlog-detail-ticket class="ticket-detail-container" *ngIf="details" [inputTicket]="clickedTicket" (toggleDetails)="toggleDetails($event)"></app-backlog-detail-ticket>
 </div>

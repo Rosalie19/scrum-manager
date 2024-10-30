@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../header/header.component';
 import { BacklogSprintComponent } from '../backlog-sprint/backlog-sprint.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Sprint } from '../../../models/sprint';
 import { TicketScrum } from '../../../models/ticket-scrum';
 import { SprintService } from '../../../services/sprint.service';
@@ -11,11 +11,13 @@ import { BacklogDetailTicketComponent } from '../backlog-detail-ticket/backlog-d
 @Component({
   selector: 'app-page-backlog',
   standalone: true,
-  imports: [HeaderComponent, BacklogSprintComponent, BacklogDetailTicketComponent, NgFor, FormsModule],
+  imports: [HeaderComponent, BacklogSprintComponent, BacklogDetailTicketComponent, NgFor, NgIf, FormsModule],
   templateUrl: './page-backlog.component.html',
   styleUrl: './page-backlog.component.scss'
 })
 export class PageBacklogComponent implements OnInit {
+  details: boolean = false;
+  clickedTicket!: [Sprint?, TicketScrum?];
   sprints!: Sprint[];
   searchText: string = '';
   constructor(private mySprintService: SprintService) { }
@@ -58,10 +60,11 @@ export class PageBacklogComponent implements OnInit {
     for (var sprint of data) {
       var ticketsList: TicketScrum[] = [];
       for (var ticket of sprint.tickets) {
-        ticketsList.push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
+        ticketsList.push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status, ticket.sprint))
       }
       this.sprints.push(new Sprint(sprint.id, sprint.title, ticketsList))
     }
+    console.log("after toggle :" , this.sprints)
   }
 
   /**
@@ -83,4 +86,16 @@ export class PageBacklogComponent implements OnInit {
     return this.sprints.map((_, index) => `sprint-${index}`);
   }
 
+  openDetails(data : [Sprint?, TicketScrum?]) : void{
+    this.clickedTicket = data;
+    this.toggleDetails(true)
+  }
+
+  toggleDetails(flag : boolean) : void {
+    console.log("toggle on page")
+    this.details = flag;
+    this.mySprintService.getAll().subscribe(response => {
+      this.loadData(response);
+    })
+  }
 }

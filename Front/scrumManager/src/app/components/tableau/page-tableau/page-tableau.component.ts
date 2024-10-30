@@ -66,6 +66,7 @@ export class PageTableauComponent implements OnInit {
       this.sprint = response as Sprint;
       this.updateColumns(this.sprint.tickets)
       this.updateAllSums();
+      console.log("tableau load data: ", this.sprint)
     }, error => {
       console.error('Error fetching data', error);
     });
@@ -104,7 +105,7 @@ export class PageTableauComponent implements OnInit {
   updateColumns(ticketsList : any){
     this.emptyColumns();
     for (var ticket of ticketsList){
-      this.columnList[ticket.status][1].push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status))
+      this.columnList[ticket.status][1].push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status, this.sprint))
     }
   }
 

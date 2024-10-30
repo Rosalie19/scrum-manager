@@ -26,20 +26,21 @@
 }
 
 .sprints-container{
-  width: 70vw;
+  width: 97%;
 }
 
 .body-container{
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  justify-content:space-between;
+  gap: 50px;
   width: 100%
 }
 
 .ticket-detail-container{
   border-radius: 10px;
   box-shadow:  grey 2px 2px 15px -5px;
-  width: 100%;
+  width: 25vw;
   padding: 20px;
   height: fit-content;
   display: flex;

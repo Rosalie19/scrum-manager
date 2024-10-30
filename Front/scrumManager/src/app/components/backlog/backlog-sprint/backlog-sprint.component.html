@@ -5,10 +5,10 @@
     </div>
     <div class="tickets-list" cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
         [cdkDropListConnectedTo]="connectedDropLists" id="sprint-{{ sprintIndex }}">
-        <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket" cdkDrag></app-backlog-ticket>
+        <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket" (click)="onTicketClicked(ticket)" cdkDrag></app-backlog-ticket>
         
     </div>
-    <button class="add-ticket-button" onclick="addTicket()">
+    <button class="add-ticket-button" (click)="onTicketClicked()">
         <div class="add-ticket-text">
             + 
         </div>

@@ -1,11 +1,11 @@
 <div class="top-container">
     <div>
-        <ng-container *ngIf="id === -1; then newTicket; else ticketId">
+        <ng-container *ngIf="id === 0; then newTicket; else ticketId">
         </ng-container>
 
         <ng-template #newTicket>
             <div class="ticket-number">
-                New ticket 
+                Nouveau ticket 
             </div>
         </ng-template>
         <ng-template #ticketId>
@@ -13,12 +13,17 @@
                 Ticket - {{id}}
             </div>
         </ng-template>
-        <input class="ticket-title" placeholder="Titre ..." maxlength="50" [(ngModel)]="titleInput" />
+        <textarea class="ticket-title" placeholder="Titre ..." maxlength="50" [(ngModel)]="titleInput" ></textarea>
     </div>
-    <div class="points-container">
-        <input class="points-number" placeholder="0" type="number"  min="0" max="100" maxlength="3" [(ngModel)]="pointsInput" />
-        Points
+    <div class="top-right-container">
+        
+    <ng-icon name="heroXMark" class="x-icon" (click)="onToggle(false)"></ng-icon>
+        <div class="points-container">
+            <input class="points-number" placeholder="0" type="number"  min="0" max="100" maxlength="3" [(ngModel)]="pointsInput" />
+            Points
+        </div>
     </div>
+
 </div>
 
 <div class="description-container">
@@ -29,6 +34,7 @@
         maxlength="300"></textarea>
 </div>
 
+<!--
 <div class="states-container">
     <div class="state-title">
         Etat
@@ -45,14 +51,12 @@
         Choix multiples
     </div>
 </div>
-
+-->
 <div class="buttons-container">
-    <button class="delete-button">
+    <button class="delete-button" (click)="onDelete()">
         Supprimer
     </button>
     <button class="save-button" (click)="onSubmit()">
         Enregistrer
     </button>
 </div>
-
-{{titleInput}}
