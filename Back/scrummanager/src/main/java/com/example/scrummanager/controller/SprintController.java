@@ -79,8 +79,8 @@ public class SprintController {
 
         if (sprintData.isPresent()) {
             Sprint _sprint = sprintData.get();
-            _sprint.getTickets().add(ticket);  // Add the new ticket to the sprint
-            sprintRepository.save(_sprint);    // Save the updated sprint
+            _sprint.getTickets().add(ticket);
+            sprintRepository.save(_sprint);
             return new ResponseEntity<>(_sprint, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

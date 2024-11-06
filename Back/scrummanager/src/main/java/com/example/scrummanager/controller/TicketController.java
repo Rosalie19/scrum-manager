@@ -83,7 +83,7 @@ public class TicketController {
                     .save(new Ticket(ticket.getTitle(), ticket.getPoints(), ticket.getStatus(), ticket.getSprint()));
             return new ResponseEntity<>(_ticket, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ticket, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

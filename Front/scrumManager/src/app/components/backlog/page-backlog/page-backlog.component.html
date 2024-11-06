@@ -1,11 +1,30 @@
 <app-header [currentPage]="'Backlog'"></app-header>
+   
+<app-popup *ngIf="popupFlag" [question]="popupQuestion" (answer)="onPopupClicked($event)"></app-popup>
 
 <input class="search-input" placeholder="Rechercher" [(ngModel)]="searchText" />
 <div class="body-container">
   <div class="sprints-container">
-    <app-backlog-sprint *ngFor="let sprint of sprints; let i = index"  [searchText]="searchText" [sprint]="sprint" [sprintIndex]="i"
-      [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i)" (clickedTicket)="openDetails($event)"></app-backlog-sprint>
+    <!-- Sprints list -->
+    <app-backlog-sprint *ngFor="let sprint of sortedItems; let i = index" [searchText]="searchText" [sprint]="sprint"
+      [sprintIndex]="i + 1" [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i + 1)"
+      (clickedTicket)="openDetails($event)" (deleteSprint)="onClickDelete($event)"></app-backlog-sprint>
+    <!-- Add sprint button -->
+    <button class="button-add-sprint" (click)="addSprint()">
+      <p>
+        +
+      </p>
+      <p>
+        Créer un sprint
+      </p>
+    </button>
+    <!-- Backlog -->
+    <app-backlog-sprint [searchText]="searchText" [sprint]="backlog" [sprintIndex]="0"
+      [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, 0)"
+      (clickedTicket)="openDetails($event)"></app-backlog-sprint>
   </div>
 
-  <app-backlog-detail-ticket class="ticket-detail-container" *ngIf="details" [inputTicket]="clickedTicket" (toggleDetails)="toggleDetails($event)"></app-backlog-detail-ticket>
+  <app-backlog-detail-ticket class="ticket-detail-container" *ngIf="details" [inputTicket]="clickedTicket"
+    (toggleDetails)="toggleDetails($event)"></app-backlog-detail-ticket>
 </div>
+

@@ -25,6 +25,9 @@ public class Sprint {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "started")
+    private boolean  started;
+
     @OneToMany (fetch = FetchType.LAZY)
     @JoinColumn(name = "sprint_id")
     private List<Ticket> tickets;
@@ -56,6 +59,13 @@ public class Sprint {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    public boolean getStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean start) {
+        this.started = start;
     }
 
     public List<Ticket> getTickets() {

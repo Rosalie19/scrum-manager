@@ -2,7 +2,7 @@
 
 .header-container{
     width : auto;
-    padding-left: 40px;
+    padding-left: 20px;
     padding-bottom: 10px;
     box-shadow: 0 3px 0 $custom-dark;
     margin-bottom: 10px;
@@ -14,7 +14,10 @@
 .tab{
     width: max-content;
     border-radius: 5px;
+    font-weight: bold;
     padding: 3px;
+    padding-right: 15px;
+    padding-left: 15px;
     cursor:pointer;
 
     &.selected{
@@ -26,4 +29,11 @@
         outline : $custom-accent ;
         outline-style: dashed;
     }
+}
+
+.first-tab{
+    font-weight: bold;
+    
+    padding: 3px;
+    padding-right: 15px;
 }

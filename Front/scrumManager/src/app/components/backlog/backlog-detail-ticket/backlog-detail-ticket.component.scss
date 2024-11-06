@@ -5,6 +5,7 @@
     flex-direction: row;
     gap: 10px;
     justify-content: space-between;
+    height: fit-content;
 
     .ticket-number {
         font-size: 12px;
@@ -132,3 +133,9 @@
     }
 }
 
+.state-container{
+    height: 50px;
+}
+.state-option{
+    height: 50px
+}

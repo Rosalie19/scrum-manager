@@ -7,14 +7,17 @@ import { TableauColumnComponent } from '../tableau-column/tableau-column.compone
 import { NgForOf } from '@angular/common';
 import { TableauPointsComponent } from '../tableau-points/tableau-points.component';
 import { TicketService
-
  } from '../../../services/ticket.service';
 import { SprintService } from '../../../services/sprint.service';
 import { Sprint } from '../../../models/sprint';
+import { FormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
 @Component({
   selector: 'app-page-tableau',
   standalone: true,
-  imports: [HeaderComponent, DragDropModule, TableauTicketComponent,TableauColumnComponent, TableauPointsComponent, NgForOf],
+  imports: [FormsModule,  MatInputModule, MatSelectModule, MatFormFieldModule, HeaderComponent, DragDropModule, TableauTicketComponent,TableauColumnComponent, TableauPointsComponent, NgForOf],
   templateUrl: './page-tableau.component.html',
   styleUrl: './page-tableau.component.scss'
 })
@@ -26,11 +29,11 @@ export class PageTableauComponent implements OnInit {
   @Input() sprint_id: number  = 1;
   constructor(private mySprintService: SprintService, private myTicketService: TicketService,) { }
   columnList!: [string, TicketScrum[]][];
-  sprint : Sprint = new Sprint(0,"",[]);
+  currentSprint : Sprint = new Sprint(0,"",[], false);
   sumList: number[] = [0,0,0,0];
   ngOnInit() {
     this.emptyColumns();
-    this.loadData();
+    this.loadData(this.sprint_id);
   }
 
   /**
@@ -58,15 +61,23 @@ export class PageTableauComponent implements OnInit {
     }
   }
 
+  onSprintChange(sprint : Sprint) : void{
+    console.log(this.currentSprint);
+    console.log(sprint);
+    this.currentSprint = sprint;
+    this.updateColumns(this.currentSprint.tickets);
+    this.updateAllSums();
+  }
+
   /**
    * Load tickets from db and update the columns
    */
-  loadData() {
-    this.mySprintService.get(this.sprint_id).subscribe( response  => {
-      this.sprint = response as Sprint;
-      this.updateColumns(this.sprint.tickets)
+  loadData(id : number) {
+    this.mySprintService.get(id).subscribe( response  => {
+      this.currentSprint = response as Sprint;
+      this.updateColumns(this.currentSprint.tickets)
       this.updateAllSums();
-      console.log("tableau load data: ", this.sprint)
+      console.log("Page tableaux - load data: ", this.currentSprint)
     }, error => {
       console.error('Error fetching data', error);
     });
@@ -104,8 +115,10 @@ export class PageTableauComponent implements OnInit {
    */
   updateColumns(ticketsList : any){
     this.emptyColumns();
+
     for (var ticket of ticketsList){
-      this.columnList[ticket.status][1].push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status, this.sprint))
+      ticket.sprint = this.currentSprint
+      this.columnList[ticket.status][1].push(ticket as TicketScrum)
     }
   }
 

@@ -1,8 +1,11 @@
 <div class="ticket-container">
-    
-    <div>
-        {{ticket.title}}
+    <div class="left-container">
+        <ng-icon name="heroBars3" class="handle-icon" cdkDragHandle></ng-icon>
+        <div>
+            {{ticket.title}}
+        </div>
     </div>
+    
     <div class="points" [ngClass]="{'todo': ticket.status === 0,  'done': ticket.status === 3}">
         {{ticket.points}}
     </div>

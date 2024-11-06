@@ -6,7 +6,11 @@
   margin-left: 20px;
   margin-right: 20px;
   justify-content: space-between;
-  align-items :end
+  align-items :end;
+
+  .sprint-title{
+    font-size: 20px;
+  }
 }
 .tableau-points-container {
   display: flex;

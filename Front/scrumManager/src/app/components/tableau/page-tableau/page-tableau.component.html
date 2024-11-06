@@ -1,6 +1,14 @@
 <app-header [currentPage]="'Tableau'"></app-header>
 <div class="top-container">
-    <div>{{sprint.title}}</div>
+    <div class="sprint-title">{{currentSprint.title}}</div>
+
+    <!--
+    <mat-form-field>
+        <select matNativeControl required [(ngModel)]="currentSprint" >
+          <option *ngFor="let sprint of sprints" [ngValue]="sprint" >{{sprint.title}}</option>
+        </select>
+    </mat-form-field>
+-->
     <app-tableau-points class="tableau-points-container" [pointsList]="sumList"
         [totalPoints]="updateTotal(sumList)"></app-tableau-points>
 </div>

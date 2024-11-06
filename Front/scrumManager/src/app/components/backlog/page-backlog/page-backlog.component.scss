@@ -9,7 +9,7 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.search-input{
+.search-input {
   padding: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -19,31 +19,56 @@
   outline: none;
   width: 20vw;
 
-  &:focus{
+  &:focus {
     outline: none;
     border: solid 1px $custom-accent;
   }
 }
 
-.sprints-container{
-  width: 97%;
-}
-
-.body-container{
+.body-container {
   display: flex;
   flex-direction: row;
-  justify-content:space-between;
+  justify-content: space-between;
   gap: 50px;
-  width: 100%
-}
+  width: 100%;
 
-.ticket-detail-container{
-  border-radius: 10px;
-  box-shadow:  grey 2px 2px 15px -5px;
-  width: 25vw;
-  padding: 20px;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  gap: 10px
+  .sprints-container {
+    width: 97%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ticket-detail-container {
+    position: sticky;
+    top: 20px;
+    border-radius: 10px;
+    box-shadow: grey 2px 2px 15px -5px;
+    width: 25vw;
+    padding: 20px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+  }
+
+  .button-add-sprint {
+    padding: 5px;
+    width: fit-content;
+    background-color: $custom-primary;
+    border: solid 2px $custom-dark;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    p{
+      margin: 0;
+      padding: 0;
+      color: $custom-dark;
+    }
+  }
 }

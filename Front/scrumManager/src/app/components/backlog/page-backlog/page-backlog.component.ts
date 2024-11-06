@@ -8,27 +8,39 @@ import { TicketScrum } from '../../../models/ticket-scrum';
 import { SprintService } from '../../../services/sprint.service';
 import { FormsModule } from '@angular/forms';
 import { BacklogDetailTicketComponent } from '../backlog-detail-ticket/backlog-detail-ticket.component';
+import { PopupComponent } from '../../popup/popup.component';
 @Component({
   selector: 'app-page-backlog',
   standalone: true,
-  imports: [HeaderComponent, BacklogSprintComponent, BacklogDetailTicketComponent, NgFor, NgIf, FormsModule],
+  imports: [HeaderComponent, PopupComponent, BacklogSprintComponent, BacklogDetailTicketComponent, NgFor, NgIf, FormsModule],
   templateUrl: './page-backlog.component.html',
   styleUrl: './page-backlog.component.scss'
 })
 export class PageBacklogComponent implements OnInit {
   details: boolean = false;
   clickedTicket!: [Sprint?, TicketScrum?];
-  sprints!: Sprint[];
+  sprints: Sprint[] = [];
+  backlog: Sprint | undefined;
   searchText: string = '';
+  popupFlag: boolean = false;
+  popupQuestion: string = "";
+  deleteId: number = -1;
   constructor(private mySprintService: SprintService) { }
+
+  get sortedItems() {
+    return this.sprints.sort((a, b) => {
+      if (b.started) return 1;
+      if (a.started) return -1;
+      return 0;
+    });
+  }
+
 
   /**
    * Called on init 
    */
   ngOnInit(): void {
-    this.mySprintService.getAll().subscribe(response => {
-      this.loadData(response);
-    })
+    this.loadData();
   }
 
   /**
@@ -46,56 +58,129 @@ export class PageBacklogComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      
     }
     this.updateSprints()
   }
 
   /**
-   * Load data from db
-   * @param data 
+   * Load data from db and update the sprints and backlog variables
    */
-  loadData(data: any) {
-    this.sprints = [];
-    for (var sprint of data) {
-      var ticketsList: TicketScrum[] = [];
-      for (var ticket of sprint.tickets) {
-        ticketsList.push(new TicketScrum(ticket.id, ticket.title, ticket.points, ticket.status, ticket.sprint))
-      }
-      this.sprints.push(new Sprint(sprint.id, sprint.title, ticketsList))
-    }
-    console.log("after toggle :" , this.sprints)
+  loadData() {
+    this.mySprintService.getAll().subscribe(response => {
+      console.log("PageBacklog - Load data :", response);
+      [this.sprints, this.backlog] = this.removeBacklogFromSprints(response as Sprint[]);
+    })
+
+  }
+
+  /**
+   * Removes the backlog from a list of sprints and stores it in anther variable
+   * @param sprintsList the list of sprints containing backlog
+   * @returns [sprints, backlog] the list without backlog and the backlog 
+   */
+  removeBacklogFromSprints(sprintsList: Sprint[]): [Sprint[], Sprint | undefined] {
+    var sprintsWithoutBacklog: Sprint[] = sprintsList.filter(item => item.title !== 'Backlog');
+    var backlog: Sprint | undefined = sprintsList.find(item => item.title === 'Backlog');
+    return [sprintsWithoutBacklog, backlog]
   }
 
   /**
    * Send updated sprints to back 
    */
-  updateSprints() {
+  updateSprints() : void{
     for (var sprint of this.sprints) {
-      this.mySprintService.update(sprint.id, sprint).subscribe(response =>{
-        console.log(response)
+      this.mySprintService.update(sprint.id, sprint).subscribe(response => {
+        console.log("Page Backlog - update sprint : ", response)
       })
     }
   }
 
   /**
-   * Get the names of teh other sprints in order to connect the drag and drop lists
+   * Get the names of the other sprints in order to connect the drag and drop lists
    * @returns the list of sprints names
    */
   getConnectedDropLists(): string[] {
-    return this.sprints.map((_, index) => `sprint-${index}`);
+    if (this.sprints) {
+      return [`sprint-0`, ...this.sprints.map((_, index) => `sprint-${index + 1}`)];
+    } else {
+      return []
+    }
+
   }
 
-  openDetails(data : [Sprint?, TicketScrum?]) : void{
+  /**
+   * Add a new sprint 
+   */
+  addSprint(): void {
+    this.mySprintService.create(new Sprint(0, "Nouveau sprint", [], false)).subscribe(response => {
+      console.log("Page Backlog - create sprint : ", response);
+      this.loadData();
+    });
+  }
+
+  /**
+   * Open the question popup
+   * @param id Id of the sprint to delete
+   */
+  onClickDelete(id: number): void {
+    this.popupQuestion = "Voulez-vous vraiment supprimer ce sprint? (Les tickets seront déplacés vers le backlog)"
+    this.popupFlag = true
+    this.deleteId = id;
+  }
+
+
+  /**
+   * Delete a sprint and add its tickets to backlog 
+   * @param sprint_id id of the sprint to delete 
+   */
+  deleteSprint(sprintToDelete: Sprint): void {
+    if (this.backlog) {
+      this.backlog.tickets = this.backlog.tickets.concat(sprintToDelete.tickets)
+      // Update backlog tickets
+      this.mySprintService.update(this.backlog.id, this.backlog).subscribe(_ => {
+        //Delete sprint
+        this.mySprintService.delete(sprintToDelete.id).subscribe(_ => {
+          //Refresh the displayed data
+          this.loadData();
+        })
+      })
+    }
+  }
+
+  /**
+   * Deletes a sprint depending on the user answer
+   * @param flag if true, delete the sprint 
+   */
+  onPopupClicked(flag: boolean): void {
+    console.log("Popup clicked")
+    this.popupFlag = false
+    if (flag) {
+      var sprintToDelete: Sprint | undefined = this.sprints.find(item => item.id === this.deleteId);
+      if (sprintToDelete) {
+        this.deleteSprint(sprintToDelete);
+      } else {
+        console.log("Error deleteSprint : sprint not found")
+      }
+    }
+  }
+
+  /**
+   * Open the ticket details window when the user clicks on a ticket 
+   * @param data the sprint and the ticket corresponding to the item clicked
+   */
+  openDetails(data: [Sprint?, TicketScrum?]): void {
     this.clickedTicket = data;
     this.toggleDetails(true)
   }
 
-  toggleDetails(flag : boolean) : void {
-    console.log("toggle on page")
+  /**
+   * Open or close the ticket detials window
+   * @param flag true to open, false to close
+   */
+  toggleDetails(flag: boolean): void {
     this.details = flag;
-    this.mySprintService.getAll().subscribe(response => {
-      this.loadData(response);
-    })
+    this.loadData();
   }
+
+
 }

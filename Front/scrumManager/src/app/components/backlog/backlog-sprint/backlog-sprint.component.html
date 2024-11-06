@@ -1,16 +1,36 @@
-<div class="sprint-container"   [ngClass]="{'backlog': sprint.title === 'Backlog'}" >
+<div class="sprint-container" [ngClass]="{'backlog': sprint.title === 'Backlog'}">
     <div class="top-container">
-        <div class="sprint-title">{{ sprint.title }}</div>
-        <div> points</div>
+        <ng-container *ngIf="modify; then input; else text">
+        </ng-container>
+
+        <ng-template #input>
+            <div class="sprint-title-input-container">
+                <input class="sprint-title-input" placeholder="Nouveau sprint" [(ngModel)]="sprint.title" />
+                <ng-icon name="heroCheck" class="modify-icon" (click)="modifyTitle()"></ng-icon>
+            </div>
+        </ng-template>
+
+        <ng-template #text>
+            <div class="sprint-title">
+                {{ sprint.title }}
+                <ng-icon name="heroPencil" class="modify-icon" (click)="toggleModify()"></ng-icon>
+            </div>
+        </ng-template>
+
+        <ng-icon *ngIf="sprint.title !== 'Backlog'" name="heroTrash" class="modify-icon"
+            (click)="onDeleteSprint()"></ng-icon>
+
+
     </div>
     <div class="tickets-list" cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
         [cdkDropListConnectedTo]="connectedDropLists" id="sprint-{{ sprintIndex }}">
-        <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket" (click)="onTicketClicked(ticket)" cdkDrag></app-backlog-ticket>
-        
+        <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket"
+            (click)="onTicketClicked(ticket)" cdkDrag></app-backlog-ticket>
+
     </div>
     <button class="add-ticket-button" (click)="onTicketClicked()">
         <div class="add-ticket-text">
-            + 
+            +
         </div>
         <div class="add-ticket-text">
             Nouveau Ticket

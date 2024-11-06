@@ -1,31 +1,32 @@
 <div class="top-container">
     <div>
-        <ng-container *ngIf="id === 0; then newTicket; else ticketId">
+        <ng-container *ngIf="currentTicket.id === 0; then newTicket; else ticketId">
         </ng-container>
 
         <ng-template #newTicket>
             <div class="ticket-number">
-                Nouveau ticket 
+                Nouveau ticket
             </div>
         </ng-template>
         <ng-template #ticketId>
             <div class="ticket-number">
-                Ticket - {{id}}
+                Ticket - {{currentTicket.id}}
             </div>
         </ng-template>
-        <textarea class="ticket-title" placeholder="Titre ..." maxlength="50" [(ngModel)]="titleInput" ></textarea>
+        <textarea class="ticket-title" placeholder="Titre ..." maxlength="50" [(ngModel)]="currentTicket.title"></textarea>
     </div>
     <div class="top-right-container">
-        
-    <ng-icon name="heroXMark" class="x-icon" (click)="onToggle(false)"></ng-icon>
+
+        <ng-icon name="heroXMark" class="x-icon" (click)="onToggle(false)"></ng-icon>
         <div class="points-container">
-            <input class="points-number" placeholder="0" type="number"  min="0" max="100" maxlength="3" [(ngModel)]="pointsInput" />
+            <input class="points-number" placeholder="0" type="number" min="0" max="100" maxlength="3"
+                [(ngModel)]="currentTicket.points" />
             Points
         </div>
     </div>
 
 </div>
-
+<!--
 <div class="description-container">
     <div class="description-title">
         Description
@@ -33,25 +34,13 @@
     <textarea class="description-input" placeholder="Ajouter une description" [(ngModel)]="descriptionInput"
         maxlength="300"></textarea>
 </div>
-
-<!--
-<div class="states-container">
-    <div class="state-title">
-        Etat
-    </div>
-    <div class="state-choices">
-        Choix multiples
-    </div>
-</div>
-<div class="sprints-container">
-    <div class="sprints-title">
-        Sprint
-    </div>
-    <div class="sprints-choices">
-        Choix multiples
-    </div>
-</div>
 -->
+<mat-form-field>
+    <select matNativeControl required [(ngModel)]="currentTicket.status">
+      <option *ngFor="let state of states; index as i" [value]="i" >{{state}}</option>
+    </select>
+  </mat-form-field>
+
 <div class="buttons-container">
     <button class="delete-button" (click)="onDelete()">
         Supprimer
