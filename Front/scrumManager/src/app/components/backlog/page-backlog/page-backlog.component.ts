@@ -9,6 +9,8 @@ import { SprintService } from '../../../services/sprint.service';
 import { FormsModule } from '@angular/forms';
 import { BacklogDetailTicketComponent } from '../backlog-detail-ticket/backlog-detail-ticket.component';
 import { PopupComponent } from '../../popup/popup.component';
+import { Project } from '../../../models/project';
+
 @Component({
   selector: 'app-page-backlog',
   standalone: true,
@@ -17,14 +19,14 @@ import { PopupComponent } from '../../popup/popup.component';
   styleUrl: './page-backlog.component.scss'
 })
 export class PageBacklogComponent implements OnInit {
+  sprints: Sprint[] = [];
   details: boolean = false;
   clickedTicket!: [Sprint?, TicketScrum?];
-  sprints: Sprint[] = [];
-  backlog: Sprint | undefined;
   searchText: string = '';
   popupFlag: boolean = false;
   popupQuestion: string = "";
   deleteId: number = -1;
+  project: Project = new Project(-1, "", "", [])
   constructor(private mySprintService: SprintService) { }
 
   get sortedItems() {
@@ -35,13 +37,20 @@ export class PageBacklogComponent implements OnInit {
     });
   }
 
-
-  /**
-   * Called on init 
-   */
   ngOnInit(): void {
     this.loadData();
   }
+
+  loadData(): void {
+    this.mySprintService.getAll().subscribe(response => {
+      this.sprints = response as Sprint[];
+      this.sprints = this.sprints.sort((a, b) => {
+        return a.id - b.id
+      });
+    })
+  }
+
+
 
   /**
    * Drag and drop events manager
@@ -63,16 +72,21 @@ export class PageBacklogComponent implements OnInit {
   }
 
   /**
-   * Load data from db and update the sprints and backlog variables
+   * Finds and returns the backlog in a list of sprints
+   * @param sprintsList the list of srpints containing the backlog
+   * @returns the backlog
    */
-  loadData() {
-    this.mySprintService.getAll().subscribe(response => {
-      console.log("PageBacklog - Load data :", response);
-      [this.sprints, this.backlog] = this.removeBacklogFromSprints(response as Sprint[]);
-    })
+  getBacklog(sprintsList: Sprint[]): Sprint {
+    var backlog: Sprint | undefined = sprintsList.find(item => item.backlog);
+    if (backlog) {
 
+      return backlog
+    } else {
+      return new Sprint(-1, "", [], false, true)
+    }
   }
 
+  // A ENLEVER ?
   /**
    * Removes the backlog from a list of sprints and stores it in anther variable
    * @param sprintsList the list of sprints containing backlog
@@ -87,7 +101,7 @@ export class PageBacklogComponent implements OnInit {
   /**
    * Send updated sprints to back 
    */
-  updateSprints() : void{
+  updateSprints(): void {
     for (var sprint of this.sprints) {
       this.mySprintService.update(sprint.id, sprint).subscribe(response => {
         console.log("Page Backlog - update sprint : ", response)
@@ -101,7 +115,7 @@ export class PageBacklogComponent implements OnInit {
    */
   getConnectedDropLists(): string[] {
     if (this.sprints) {
-      return [`sprint-0`, ...this.sprints.map((_, index) => `sprint-${index + 1}`)];
+      return [`sprint-0`, ... this.sprints.map((_, index) => `sprint-${index + 1}`)];
     } else {
       return []
     }
@@ -112,7 +126,7 @@ export class PageBacklogComponent implements OnInit {
    * Add a new sprint 
    */
   addSprint(): void {
-    this.mySprintService.create(new Sprint(0, "Nouveau sprint", [], false)).subscribe(response => {
+    this.mySprintService.create(new Sprint(100, "Nouveau sprint", [], false, false)).subscribe(response => {
       console.log("Page Backlog - create sprint : ", response);
       this.loadData();
     });
@@ -134,17 +148,53 @@ export class PageBacklogComponent implements OnInit {
    * @param sprint_id id of the sprint to delete 
    */
   deleteSprint(sprintToDelete: Sprint): void {
-    if (this.backlog) {
-      this.backlog.tickets = this.backlog.tickets.concat(sprintToDelete.tickets)
+    var backlog = this.getBacklog(this.sprints);
+
+      backlog.tickets = backlog.tickets.concat(sprintToDelete.tickets)
       // Update backlog tickets
-      this.mySprintService.update(this.backlog.id, this.backlog).subscribe(_ => {
+      this.mySprintService.update(backlog.id, backlog).subscribe(_ => {
         //Delete sprint
         this.mySprintService.delete(sprintToDelete.id).subscribe(_ => {
           //Refresh the displayed data
           this.loadData();
         })
       })
+    
+
+    /*
+    var backlog = this.getBacklog(this.sprints)
+    backlog.tickets = backlog.tickets.concat(sprintToDelete.tickets)
+    sprintToDelete.tickets = []
+    this.mySprintService.update(sprintToDelete.id, sprintToDelete).subscribe(response => {
+      console.log("after updating sprint to delete : ", response)
+      // Update backlog tickets
+      this.mySprintService.update(backlog.id, backlog).subscribe(_ => {
+        console.log("after updating backlog : ", response)
+        console.log("after updating backlog : ", backlog)
+        //Delete sprint
+        this.mySprintService.delete(sprintToDelete.id).subscribe(_ => {
+
+          //Refresh the displayed data
+          this.loadData();
+        })
+      })
+    })
+      */
+  }
+
+
+  /**
+   * Upadates the sprint id of a list of tickets
+   * @param id the new id
+   * @param tickets the tickets to update
+   * @returns the updates tickets list
+   */
+  updateSprint(sprint: Sprint, tickets: TicketScrum[]): TicketScrum[] {
+    for (let item of tickets) {
+      item.sprint = sprint
     }
+    console.log("update id : ", tickets)
+    return tickets
   }
 
   /**
@@ -152,7 +202,6 @@ export class PageBacklogComponent implements OnInit {
    * @param flag if true, delete the sprint 
    */
   onPopupClicked(flag: boolean): void {
-    console.log("Popup clicked")
     this.popupFlag = false
     if (flag) {
       var sprintToDelete: Sprint | undefined = this.sprints.find(item => item.id === this.deleteId);

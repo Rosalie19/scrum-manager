@@ -1,4 +1,4 @@
-<app-header [currentPage]="'Backlog'"></app-header>
+<app-header [currentPage]="'Backlog'" [projectName]="'ScrumManager'"></app-header>
    
 <app-popup *ngIf="popupFlag" [question]="popupQuestion" (answer)="onPopupClicked($event)"></app-popup>
 
@@ -6,9 +6,12 @@
 <div class="body-container">
   <div class="sprints-container">
     <!-- Sprints list -->
-    <app-backlog-sprint *ngFor="let sprint of sortedItems; let i = index" [searchText]="searchText" [sprint]="sprint"
+     <div *ngFor="let sprint of sortedItems; let i = index">
+      <app-backlog-sprint  *ngIf="!sprint.backlog"    [searchText]="searchText" [sprint]="sprint"
       [sprintIndex]="i + 1" [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, i + 1)"
       (clickedTicket)="openDetails($event)" (deleteSprint)="onClickDelete($event)"></app-backlog-sprint>
+     </div>
+    
     <!-- Add sprint button -->
     <button class="button-add-sprint" (click)="addSprint()">
       <p>
@@ -19,7 +22,7 @@
       </p>
     </button>
     <!-- Backlog -->
-    <app-backlog-sprint [searchText]="searchText" [sprint]="backlog" [sprintIndex]="0"
+    <app-backlog-sprint [searchText]="searchText" [sprint]="getBacklog(sprints)" [sprintIndex]="0"
       [connectedDropLists]="getConnectedDropLists()" (dropTicket)="drop($event, 0)"
       (clickedTicket)="openDetails($event)"></app-backlog-sprint>
   </div>

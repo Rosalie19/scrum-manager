@@ -133,9 +133,12 @@
     }
 }
 
-.state-container{
-    height: 50px;
-}
-.state-option{
-    height: 50px
+
+.states-selector{
+    height: 200px;
+
+    padding: 10px;
+    .states-option{
+        height: 50px;
+    }
 }

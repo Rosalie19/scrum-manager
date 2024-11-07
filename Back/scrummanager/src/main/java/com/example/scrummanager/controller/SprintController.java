@@ -93,7 +93,10 @@ public class SprintController {
         if (sprintData.isPresent()) {
             Sprint _sprint = sprintData.get();
             _sprint.setTitle(sprint.getTitle());
+            _sprint.setBacklog(sprint.getBacklog());
+            _sprint.setStarted(sprint.getStarted());
             _sprint.setTickets(sprint.getTickets());
+            _sprint.setProject(sprint.getProject());
             return new ResponseEntity<>(sprintRepository.save(_sprint), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

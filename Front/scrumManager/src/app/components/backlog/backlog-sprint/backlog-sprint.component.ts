@@ -57,8 +57,9 @@ export class BacklogSprintComponent {
   }
 
   modifyTitle() {
+    console.log(this.sprint)
     this.mySprintService.update(this.sprint.id, this.sprint).subscribe(response => {
-      console.log("sprint title updated : ", response )
+      console.log("sprint title updated : ", response, this.sprint )
     })
     this.toggleModify()
   }

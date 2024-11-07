@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Sprint } from '../models/sprint';
-import { TicketScrum } from '../models/ticket-scrum';
-import { Observable } from 'rxjs';
+import { Project } from '../models/project';
 
-const baseUrl = 'http://localhost:8080/api/sprints';
+const baseUrl = 'http://localhost:8080/api/projects';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SprintService {
+export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
@@ -21,11 +19,11 @@ export class SprintService {
     return this.http.get(`${baseUrl}/${id}`);
   }
 
-  create(data : Sprint) {
+  create(data : Project) {
     return this.http.post(baseUrl, data);
   }
 
-  update(id : number, data: Sprint) {
+  update(id : number, data: Project) {
     return this.http.put(`${baseUrl}/${id}`, data);
   }
 
@@ -40,14 +38,4 @@ export class SprintService {
   findByTitle(title : string) {
     return this.http.get(`${baseUrl}?title=${title}`);
   }
-
-  addTicketToSprint(sprintId: number, ticket: TicketScrum): Observable<any> {
-    const url = `${baseUrl}/${sprintId}/tickets`;
-    return this.http.post(url, ticket);
-  }
-
-  findByProjectId(project_id : number) {
-    return this.http.get(`${baseUrl}/project/${project_id}`);
-  }
-  
 }

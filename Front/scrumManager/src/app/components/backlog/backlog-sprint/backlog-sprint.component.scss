@@ -45,7 +45,11 @@
         flex-direction: column;
         outline: solid $custom-green 2px;
         margin-top: 5px;
-        min-height: 40px
+        min-height: 40px;
+
+        &.empty{
+            outline: dashed $custom-green 2px;
+        }
     }
 
     .add-ticket-button{

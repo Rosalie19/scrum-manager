@@ -1,8 +1,10 @@
 <div class="header-container">
     <div 
-        class="first-tab" 
+        class="tab" 
+        [ngClass]="{'selected': currentPage === 'project'}" 
+        (click)="navigateTo('project')"
         >
-        Scrum Manager
+        {{projectName}}
     </div>
     <div 
         class="tab" 

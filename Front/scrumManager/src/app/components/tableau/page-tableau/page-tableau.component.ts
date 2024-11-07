@@ -27,11 +27,15 @@ export class PageTableauComponent implements OnInit {
    * sumList number[] : array of the sum of the tickets points in each column 
    */
   @Input() sprint_id: number  = 1;
-  constructor(private mySprintService: SprintService, private myTicketService: TicketService,) { }
   columnList!: [string, TicketScrum[]][];
-  currentSprint : Sprint = new Sprint(0,"",[], false);
+  currentSprint : Sprint = new Sprint(0,"",[], false, false);
   sumList: number[] = [0,0,0,0];
+
+  constructor(private mySprintService: SprintService, private myTicketService: TicketService,) { }
+
+
   ngOnInit() {
+
     this.emptyColumns();
     this.loadData(this.sprint_id);
   }
@@ -82,6 +86,8 @@ export class PageTableauComponent implements OnInit {
       console.error('Error fetching data', error);
     });
   }
+
+  
 
   /**
    * Returns the points total of the tickets in a list

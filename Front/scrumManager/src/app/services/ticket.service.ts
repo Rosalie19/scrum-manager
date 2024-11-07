@@ -39,7 +39,4 @@ export class TicketService {
     return this.http.get(`${baseUrl}?title=${title}`);
   }
 
-  findBySprintId(sprint_id : number) {
-    return this.http.get(`${baseUrl}/sprint/${sprint_id}`);
-  }
 }

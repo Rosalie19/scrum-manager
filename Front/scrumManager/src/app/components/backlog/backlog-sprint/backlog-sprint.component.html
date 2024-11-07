@@ -1,4 +1,4 @@
-<div class="sprint-container" [ngClass]="{'backlog': sprint.title === 'Backlog'}">
+<div class="sprint-container" [ngClass]="{'backlog': sprint.backlog }">
     <div class="top-container">
         <ng-container *ngIf="modify; then input; else text">
         </ng-container>
@@ -16,13 +16,12 @@
                 <ng-icon name="heroPencil" class="modify-icon" (click)="toggleModify()"></ng-icon>
             </div>
         </ng-template>
-
-        <ng-icon *ngIf="sprint.title !== 'Backlog'" name="heroTrash" class="modify-icon"
+        <ng-icon *ngIf="!(sprint.title === 'Backlog' || sprint.started)" name="heroTrash" class="modify-icon"
             (click)="onDeleteSprint()"></ng-icon>
 
 
     </div>
-    <div class="tickets-list" cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
+    <div class="tickets-list" [ngClass]="{'empty': filterTickets(searchText).length === 0}" cdkDropList [cdkDropListData]="sprint.tickets" (cdkDropListDropped)="onDrop($event)"
         [cdkDropListConnectedTo]="connectedDropLists" id="sprint-{{ sprintIndex }}">
         <app-backlog-ticket *ngFor="let ticket of filterTickets(searchText)" [ticket]="ticket"
             (click)="onTicketClicked(ticket)" cdkDrag></app-backlog-ticket>

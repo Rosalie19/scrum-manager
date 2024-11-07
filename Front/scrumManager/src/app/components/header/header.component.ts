@@ -10,12 +10,13 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent{
   @Input() currentPage! :  string;
+  @Input() projectName: string = "Project";
   pages : string[] = ["Tableau", "Backlog"]
 
   constructor(private router: Router) {}
 
   navigateTo(page: string): void {
     this.currentPage = page;
-    this.router.navigate([page.toLowerCase()]);
+    this.router.navigate([page.toLowerCase()+"/1"]);
   }
 }

@@ -13,7 +13,8 @@
                 Ticket - {{currentTicket.id}}
             </div>
         </ng-template>
-        <textarea class="ticket-title" placeholder="Titre ..." maxlength="50" [(ngModel)]="currentTicket.title"></textarea>
+        <textarea class="ticket-title" placeholder="Titre ..." maxlength="50"
+            [(ngModel)]="currentTicket.title"></textarea>
     </div>
     <div class="top-right-container">
 
@@ -36,10 +37,10 @@
 </div>
 -->
 <mat-form-field>
-    <select matNativeControl required [(ngModel)]="currentTicket.status">
-      <option *ngFor="let state of states; index as i" [value]="i" >{{state}}</option>
+    <select class="states-selector" matNativeControl required [(ngModel)]="currentTicket.status">
+        <option class="states-option" *ngFor="let state of states; index as i" [value]="i">{{state}}</option>
     </select>
-  </mat-form-field>
+</mat-form-field>
 
 <div class="buttons-container">
     <button class="delete-button" (click)="onDelete()">

@@ -60,22 +60,6 @@ public class TicketController {
         }
     }
 
-    @GetMapping("/sprint/{id}")
-    public ResponseEntity<List<Ticket>> getTicketBySprintId(@PathVariable("id") long id) {
-        try {
-            List<Ticket> tickets = new ArrayList<Ticket>();
-            tickets.addAll(ticketRepository.findTicketsBySprintId(id));
-
-            if (tickets.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
-            return new ResponseEntity<>(tickets, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping
     public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
         try {

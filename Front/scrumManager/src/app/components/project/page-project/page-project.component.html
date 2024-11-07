@@ -1,0 +1,48 @@
+<app-header [projectName]="'ScrumManager'" [currentPage]="'project'"></app-header>
+<div class="top-container">
+    <img class="project-image" src="http://localhost:4200/assets/logo_project.png"/>
+    <div class="top-container-right">
+        <div class="project-title">
+            {{project.title}}
+        </div>
+        <div class="project-description"> 
+            {{project.description}}
+        </div>
+    </div>
+</div>
+<div class="bottom-container">
+    <!--Velocity container-->
+    <div class="detail-container">
+        <div class="round-container">
+            <p class="round-detail">
+                0
+            </p>
+        </div>
+        <div class="detail">
+            Vélocité moyenne
+        </div>
+    </div>
+    <!--Sprint container-->
+    <div class="detail-container">
+        <div class="round-container">
+            <p class="round-detail">
+                {{getStartedSprint(this.sprints).title}}
+            </p>
+        </div>
+        <div class="detail">
+            Sprint Actuel
+        </div>
+    </div>
+    <!--Points container-->
+    <div class="detail-container">
+        <div class="round-container">
+            <p class="round-detail">
+                {{getFinishedPoints(getStartedSprint(this.sprints))}} /{{getTotalPoints(getStartedSprint(this.sprints))}}
+            </p>
+           
+        </div>
+        <div class="detail">
+            Points réalisés
+        </div>
+    </div>
+</div>
