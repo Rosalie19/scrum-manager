@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TicketScrum } from '../../../models/ticket-scrum';
+import { Ticket } from '../../../models/ticket';
 import { NgClass } from '@angular/common';
 import {CdkDragHandle} from '@angular/cdk/drag-drop';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
@@ -13,5 +13,5 @@ import { heroBars3 } from '@ng-icons/heroicons/outline';
   styleUrl: './backlog-ticket.component.scss'
 })
 export class BacklogTicketComponent {
-  @Input() ticket!: TicketScrum
+  @Input() ticket!: Ticket
 }

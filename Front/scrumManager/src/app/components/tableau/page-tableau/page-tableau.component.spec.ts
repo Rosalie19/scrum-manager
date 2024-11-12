@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageTableauComponent } from './page-tableau.component';
-import { TicketScrum } from '../../../models/ticket-scrum';
-import {  provideHttpClientTesting } from '@angular/common/http/testing';
+import { Ticket } from '../../../models/ticket';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 describe('PageTableauComponent', () => {
   let component: PageTableauComponent;
@@ -9,7 +9,7 @@ describe('PageTableauComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageTableauComponent], 
+      imports: [PageTableauComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()]
     })
       .compileComponents();
@@ -21,15 +21,30 @@ describe('PageTableauComponent', () => {
     fixture.detectChanges();
   });
 
-  it('updateSum : returns the correct number', () => {
+  it('updateSum : with tickets list', () => {
     //Arrange
     var total: number = 4;
-    const ticketList: TicketScrum[] = [
-      new TicketScrum(0, "", 2, 0),
-      new TicketScrum(0, "", 3, 0),
-      new TicketScrum(0, "", 1, 0),
+    const ticketList: Ticket[] = [
+      new Ticket(0, "", 2, 0),
+      new Ticket(0, "", 3, 0),
+      new Ticket(0, "", 1, 0),
     ]
     const expectedTotal: number = 6
+
+    //Act
+    total = component.updateSum(ticketList);
+
+
+    //Assert
+    expect(total).toBe(expectedTotal, "It should return the correct total");
+  });
+
+  it('updateSum : with empty tickets list', () => {
+    //Arrange
+    var total: number = 4;
+    const ticketList: Ticket[] = [
+    ]
+    const expectedTotal: number = 0
 
     //Act
     total = component.updateSum(ticketList);
@@ -43,13 +58,13 @@ describe('PageTableauComponent', () => {
     //Arrange
     component.sumList = [0, 0, 3];
     component.columnList = [["",
-      [new TicketScrum(0, "", 2, 0),
-      new TicketScrum(0, "", 3, 0),
-      new TicketScrum(0, "", 1, 0),]
+      [new Ticket(0, "", 2, 0),
+      new Ticket(0, "", 3, 0),
+      new Ticket(0, "", 1, 0),]
     ],
     ["",
-      [new TicketScrum(0, "", 1, 0),
-      new TicketScrum(0, "", 0, 0)]
+      [new Ticket(0, "", 1, 0),
+      new Ticket(0, "", 0, 0)]
     ],
     ["", []]];
 
@@ -62,49 +77,50 @@ describe('PageTableauComponent', () => {
     expect(component.sumList).toEqual(expectedSums, "It should return the correct total");
   });
 
+  it('updateTotal : updates the points total', () => {
+    //Arrange
+    component.sumList = [5, 0, 3];
+    const expectedTotal: number = 8;
+
+    //Act
+    var total: number = component.updateTotal(component.sumList);
+
+    //Assert
+    expect(total).toEqual(expectedTotal, "It should return the correct total");
+  });
+
+  it('updateTotal : with empty sumlist', () => {
+    //Arrange
+    component.sumList = [];
+    const expectedTotal: number = 0;
+
+    //Act
+    var total: number = component.updateTotal(component.sumList);
+
+    //Assert
+    expect(total).toEqual(expectedTotal, "It should return the correct total");
+  });
+
   it('updateColumns : updates all the columns', () => {
     //Arrange
-    var ticketsList = [{
-      id: 1,
-      title: "",
-      status: 0,
-      points: 3
-    },
-    {
-      id: 2,
-      title: "",
-      status: 1,
-      points: 10
-    },
-    {
-      id: 3,
-      title: "",
-      status: 0,
-      points: 2
-    },
-    {
-      id: 4,
-      title: "",
-      status: 3,
-      points: 8
-    }];
-    component.columnList = [
-      ["", []],
-      ["", []],
-      ["", []],
-      ["", []]];
+    var ticketsList: Ticket[] = [
+      new Ticket( 1, "", 0, 3 ),
+      new Ticket( 2, "", 1, 10 ),
+      new Ticket(  3, "", 0, 2 ),
+      new Ticket( 4, "", 3, 8 )];
 
-    const expectedColumns: [string, TicketScrum[]][] = [["À faire",
-      [new TicketScrum(1, "", 3, 0),
-      new TicketScrum(3, "", 2, 0)]
+    const expectedColumns: [string, Ticket[]][] = [
+      ["À faire",
+      [new Ticket(1, "", 3, 0),
+      new Ticket(3, "", 2, 0)]
     ],
     ["En cours",
       [
-        new TicketScrum(2, "", 10, 1),
+        new Ticket(2, "", 10, 1),
       ]],
     ["À tester", []],
     ["Terminé", [
-      new TicketScrum(4, "", 8, 3)
+      new Ticket(4, "", 8, 3)
     ]],
     ]
 
@@ -112,38 +128,26 @@ describe('PageTableauComponent', () => {
     component.updateColumns(ticketsList);
 
     //Assert
-    expect(component.columnList).toEqual(expectedColumns, "It should return the correct collumns");
+    expect(component.columnList).toEqual(expectedColumns, "It should return the correct columns");
   });
 
-  it('updateTotal : updates the points total', () => {
+  it('emptyColumns : empties the columns', () => {
     //Arrange
-    component.sumList = [5, 0, 3];
-    const expectedTotal : number = 8;
-
-    //Act
-    var total : number = component.updateTotal(component.sumList);
-
-    //Assert
-    expect(total).toEqual(expectedTotal, "It should return the correct total");
-  });
-
-  it('emptyColumns : emties the columns', () => {
-    //Arrange
-    component.columnList =  [["",
-      [new TicketScrum(0, "", 1, 0),
-      new TicketScrum(0, "", 3, 0)]
+    component.columnList = [["",
+      [new Ticket(0, "", 1, 0),
+      new Ticket(0, "", 3, 0)]
     ],
     ["",
       [
-        new TicketScrum(0, "", 2, 1),
+        new Ticket(0, "", 2, 1),
       ]],
     ["", []],
     ["", [
-      new TicketScrum(0, "", 4, 3)
+      new Ticket(0, "", 4, 3)
     ]],
     ];
 
-    const expectedColumns : [string, TicketScrum[]][] = [["À faire", []], ["En cours", []], ["À tester", []], ["Terminé", []]];
+    const expectedColumns: [string, Ticket[]][] = [["À faire", []], ["En cours", []], ["À tester", []], ["Terminé", []]];
 
     //Act
     component.emptyColumns()

@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableauTicketComponent } from '../tableau-ticket/tableau-ticket.component';
 import { NgFor } from '@angular/common';
 import { CdkDragDrop, DragDropModule} from '@angular/cdk/drag-drop';
-import { TicketScrum } from '../../../models/ticket-scrum';
+import { Ticket } from '../../../models/ticket';
 
 @Component({
   selector: 'app-tableau-column',
@@ -14,12 +14,12 @@ import { TicketScrum } from '../../../models/ticket-scrum';
 })
 export class TableauColumnComponent {
   @Input() title: any;
-  @Input() tickets!: TicketScrum[];
+  @Input() tickets!: Ticket[];
   @Input() columnIndex!: number;
   @Input() connectedDropLists!: string[];
-  @Output() dropTicket = new EventEmitter<CdkDragDrop<TicketScrum[]>>();
+  @Output() dropTicket = new EventEmitter<CdkDragDrop<Ticket[]>>();
 
-  onDrop(event: CdkDragDrop<TicketScrum[]>) {
+  onDrop(event: CdkDragDrop<Ticket[]>) {
     this.dropTicket.emit(event);
   }
 }

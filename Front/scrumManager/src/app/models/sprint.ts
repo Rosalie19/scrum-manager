@@ -1,7 +1,11 @@
-import { Project } from "./project";
-import { TicketScrum } from "./ticket-scrum";
+import { Ticket } from "./ticket";
 
 export class Sprint {
-    constructor(public id : number, public title: string, public tickets: TicketScrum[], public started: Boolean, public backlog: boolean, public project?: Project) {
+    constructor(
+        public id : number, 
+        public title: string, 
+        public tickets: Ticket[], 
+        public started: Boolean, 
+        public backlog: boolean) {
     }
 }

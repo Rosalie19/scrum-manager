@@ -96,15 +96,4 @@ public class ProjectController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteAllSprints() {
-        try {
-            projectRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
 }

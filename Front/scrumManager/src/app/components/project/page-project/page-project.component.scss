@@ -34,6 +34,7 @@
     flex-direction: row;
     justify-content: space-around;
     margin-top: 50px;
+
     .detail-container{
         display: flex;
         flex-direction: column;
@@ -49,6 +50,7 @@
             justify-content: center;
             align-items: center;
             border-radius: 50%;
+            
             .round-detail{
                 font-size: 36px;
             }

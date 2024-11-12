@@ -1,100 +1,92 @@
+/**
+ * Component Backlog Detail Ticket
+ * @parent page-backlog
+ * @functionnalities Form to modify a ticket. 
+ * Is visible when the user clicks on an existing ticket or on a "add ticket" button
+ */
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TicketScrum } from '../../../models/ticket-scrum';
+import { Ticket } from '../../../models/ticket';
 import { TicketService } from '../../../services/ticket.service';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroXMark } from '@ng-icons/heroicons/outline';
-import { Sprint } from '../../../models/sprint';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TICKET_STATUSES } from '../../../app.constants';
 @Component({
   selector: 'app-backlog-detail-ticket',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgIconComponent, MatInputModule, MatSelectModule, MatFormFieldModule],
-  
+  imports: [
+    FormsModule,
+    CommonModule,
+    NgIconComponent,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule],
   viewProviders: [provideIcons({ heroXMark })],
   templateUrl: './backlog-detail-ticket.component.html',
   styleUrl: './backlog-detail-ticket.component.scss'
 })
-export class BacklogDetailTicketComponent implements OnInit{
+export class BacklogDetailTicketComponent implements OnInit {
 
-  @Input() inputTicket: [Sprint?, TicketScrum?] =[];
+  /**
+   * inputTicket : data of the ticket to modify
+   * toggleDetails : flag sent to parent to close the component
+   * currentTicket : Ticket object containing the ticket modified by the user
+   * states : states of a ticket (constant)
+   */
+  @Input() inputTicket: Ticket = new Ticket(0, "", 0, 0);
   @Output() toggleDetails = new EventEmitter<boolean>();
-  currentTicket : TicketScrum = new TicketScrum(0,"",0,0)
-  /*
-  titleInput: string = "";
-  descriptionInput: string = "";
-  pointsInput: number = 0;
-  id: number = 0;
-  */
-  states: string[] = ["À faire", "En cours", "À tester", "Terminé"]
+  currentTicket: Ticket = new Ticket(0, "", 0, 0);
+  states = TICKET_STATUSES
+
   constructor(private myTicketService: TicketService) { }
 
   /**
    * Called on init
+   * @test not tested
    */
-  ngOnInit(){
-    
-    if (this.inputTicket[1]){
-      this.currentTicket.title = this.inputTicket[1].title
-      this.currentTicket.points  = this.inputTicket[1].points
-      this.currentTicket.id  = this.inputTicket[1].id
-      this.currentTicket.status  = this.inputTicket[1].status
-    }
-
-    if(this.inputTicket[0]){
-      this.currentTicket.sprint = this.inputTicket[0]
-    }
+  ngOnInit() {
+    this.currentTicket.title = this.inputTicket.title
+    this.currentTicket.points = this.inputTicket.points
+    this.currentTicket.id = this.inputTicket.id
+    this.currentTicket.status = this.inputTicket.status
   }
+
   /**
    * Creates the ticket if it doesn't exist
    * updates the existing ticket otherwise
-   * @test not tested
+   * @test tested
    */
-  onSubmit() :void {
-    //const newTicket : TicketScrum = new TicketScrum(0, this.titleInput, this.pointsInput, 0, this.inputTicket[0]);
-    console.log("submit :" , this.currentTicket)
-    if (this.inputTicket[1]){
-      this.myTicketService.update(this.currentTicket.id, this.currentTicket).subscribe(response => {
-        console.log("updated : ", response)
-        this.onToggle(false);
-      })
-      
-    } else {
-      this.myTicketService.create(this.currentTicket).subscribe(response => {
-        console.log("created : ", response);
-        this.onToggle(false);
-        /*
-        const postTicket = response as TicketScrum
-        this.mySprintService.addTicketToSprint(this.inputTicket[0],postTicket ).subscribe(response => {
-          console.log("sprint : ", response)
-          this.onToggle(false);
-        })
-          */
-      })
-    }
+  onSubmit(): void {
+    this.myTicketService.update(this.currentTicket.id, this.currentTicket).subscribe(response => {
+      console.log("updated : ", response)
+      this.onToggle(false);
+    })
   }
 
   /**
    * Deletes a ticket
+   * @test tested
    */
-  onDelete() : void{
-    if (this.currentTicket.id !== 0){
+  onDelete(): void {
+    if (this.currentTicket.id !== 0) {
       this.myTicketService.delete(this.currentTicket.id).subscribe(response => {
         console.log("Ticket deleted : ", response);
         this.onToggle(false);
       })
     }
-    
   }
 
   /**
    * Open/close detail window
    * @param flag true if the detail window is opened
+   * @test tested
    */
-  onToggle(flag: boolean): void{
+  onToggle(flag: boolean): void {
     this.toggleDetails.emit(flag);
   }
 }

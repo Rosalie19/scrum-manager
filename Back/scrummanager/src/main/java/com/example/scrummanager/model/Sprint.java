@@ -4,19 +4,21 @@ package com.example.scrummanager.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue; // for Spring Boot 3
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToMany; // for Spring Boot 3
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,14 +37,16 @@ public class Sprint {
 
     @OneToMany (fetch = FetchType.LAZY)
     @JoinColumn(name = "sprint_id")
+    @JsonManagedReference
     private List<Ticket> tickets;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonBackReference
     private Project project;
-    
+
     @Column(name = "is_backlog")
     private boolean isBacklog;
 
@@ -56,10 +60,10 @@ public class Sprint {
 
     public Sprint(String title, List<Ticket> tickets, Boolean started, Project project , Boolean backlog) {
         this.title = title;
-        this.project = project;
         this.tickets = (tickets != null) ? tickets : new ArrayList<>();
         this.started = started; 
         this.isBacklog = backlog;
+        this.project = project;
     }
 
     public long getId() {
@@ -93,19 +97,19 @@ public class Sprint {
         this.tickets = tickets;
     }
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
     public boolean getBacklog() {
         return isBacklog;
     }
 
     public void setBacklog(boolean backlog) {
         this.isBacklog = backlog;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

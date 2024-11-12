@@ -80,7 +80,6 @@ public class TicketController {
             _ticket.setTitle(ticket.getTitle());
             _ticket.setPoints(ticket.getPoints());
             _ticket.setStatus(ticket.getStatus());
-            _ticket.setSprint(ticket.getSprint());
             return new ResponseEntity<>(ticketRepository.save(_ticket), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -95,16 +94,5 @@ public class TicketController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteAllTickets() {
-        try {
-            ticketRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
 }

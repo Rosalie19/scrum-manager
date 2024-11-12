@@ -14,7 +14,6 @@ import { SprintService } from '../../../services/sprint.service';
 })
 export class PageProjectComponent {
   project: Project = new Project(-1, "", "", []);
-  sprints: Sprint[] = [];
   constructor(private route: ActivatedRoute, private projectService: ProjectService, private sprintService: SprintService) { }
 
   ngOnInit(): void {
@@ -23,7 +22,7 @@ export class PageProjectComponent {
       this.loadProjectData(params.get('project') as unknown as number); // Call your method to load project data based on the project ID
     });
 
-    this.loadSprints();
+    
   }
 
   loadProjectData(id: number): void {
@@ -32,11 +31,6 @@ export class PageProjectComponent {
     })
   }
 
-  loadSprints(): void {
-    this.sprintService.getAll().subscribe(response => {
-      this.sprints = response as Sprint[];
-    })
-  }
 
   getTotalPoints(sprint: Sprint): number {
     var total = 0;

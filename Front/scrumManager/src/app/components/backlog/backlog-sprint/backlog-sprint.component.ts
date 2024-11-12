@@ -2,12 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BacklogTicketComponent } from '../backlog-ticket/backlog-ticket.component';
 import { NgFor, NgClass, NgIf } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { TicketScrum } from '../../../models/ticket-scrum';
-import { Sprint } from '../../../models/sprint';
+import { Ticket } from '../../../models/ticket';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroPencil, heroCheck, heroXMark, heroTrash } from '@ng-icons/heroicons/outline';
 import { FormsModule } from '@angular/forms';
 import { SprintService } from '../../../services/sprint.service';
+import { TicketService } from '../../../services/ticket.service';
+import { Sprint } from '../../../models/sprint';
 @Component({
   selector: 'app-backlog-sprint',
   standalone: true,
@@ -22,49 +23,91 @@ export class BacklogSprintComponent {
   @Input() sprint: any;
   @Input() sprintIndex!: number;
   @Input() connectedDropLists!: string[];
-  @Output() dropTicket = new EventEmitter<CdkDragDrop<string[]>>();
-  @Output() clickedTicket = new EventEmitter<[Sprint?, TicketScrum?]>();
-  @Output() deleteSprint = new EventEmitter<number>();
+  @Output() dropTicket : EventEmitter<CdkDragDrop<string[]>> = new EventEmitter<CdkDragDrop<string[]>>();
+  @Output() clickedTicket : EventEmitter<Ticket> = new EventEmitter<Ticket>();
+  @Output() deleteSprint : EventEmitter<number> = new EventEmitter<number>();
   modify: boolean = false;
-  constructor(private mySprintService: SprintService) { }
+  constructor(private mySprintService: SprintService, private myTicketService : TicketService) { }
 
-  
-  onDrop(event: CdkDragDrop<string[]>) {
+  /**
+   * Send drop event to parent
+   * @param event drag and drop event
+   * @test tested
+   */
+  onDrop(event: CdkDragDrop<string[]>) : void{
     this.dropTicket.emit(event);
   }
 
   /**
    * Filter tickets by title
    * @param searchText 
-   * @returns 
+   * @returns filtered tickets
+   * @test tested
    */
-  filterTickets(searchText: string) {
+  filterTickets(searchText: string) : Ticket[] {
     if (!searchText || searchText.length < 3) {
       return this.sprint.tickets;
-      ;
     }
+
     return this.sprint.tickets.filter((item: { title: string; }) =>
       item.title.toLowerCase().includes(searchText.toLowerCase())
     );
   }
 
-  onTicketClicked(clickEvent?: TicketScrum) {
-    this.clickedTicket.emit([this.sprint, clickEvent]);
+  /**
+   * Emits to parent when a ticket is clicked on
+   * @param clickEvent the clicked ticket
+   * @test tested
+   */
+  onTicketClicked(clickEvent?: Ticket) : void {
+    this.clickedTicket.emit(clickEvent);
   }
 
-  toggleModify() {
+  /**
+   * Add a new ticket to the sprint 
+   * @test tested
+   */
+  addTicket() : void{
+    this.myTicketService.create(new Ticket(0, "Nouveau Ticket", 0, 0)).subscribe(response => {
+      var newTicket = response as Ticket;
+      this.sprint.tickets.push(newTicket);
+      this.updateSprint();
+      this.onTicketClicked(newTicket);
+    })
+  }
+
+  /**
+   * Toggle modify flag
+   * @test tested
+   */
+  toggleModify() : void{
     this.modify = !this.modify
   }
 
-  modifyTitle() {
-    console.log(this.sprint)
-    this.mySprintService.update(this.sprint.id, this.sprint).subscribe(response => {
-      console.log("sprint title updated : ", response, this.sprint )
-    })
+  /**
+   * Updates the sprint and toggles modify flag on input
+   * @test tested
+   */
+  modifyTitle() : void{
+    this.updateSprint()
     this.toggleModify()
   }
 
-  onDeleteSprint(){
+  /**
+   * Updates the sprint on the server
+   * @test tested
+   */
+  updateSprint() : void{
+    this.mySprintService.update(this.sprint.id, this.sprint).subscribe(response => {
+      console.log("sprint title updated : ", response, this.sprint )
+    })
+  }
+
+  /**
+   * Emits delete to parent
+   * @test tested
+   */
+  onDeleteSprint() : void{
     this.deleteSprint.emit(this.sprint.id)
   }
 }

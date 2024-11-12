@@ -26,7 +26,7 @@
     <div class="detail-container">
         <div class="round-container">
             <p class="round-detail">
-                {{getStartedSprint(this.sprints).title}}
+                {{getStartedSprint(this.project.sprints).title}}
             </p>
         </div>
         <div class="detail">
@@ -37,7 +37,7 @@
     <div class="detail-container">
         <div class="round-container">
             <p class="round-detail">
-                {{getFinishedPoints(getStartedSprint(this.sprints))}} /{{getTotalPoints(getStartedSprint(this.sprints))}}
+                {{getFinishedPoints(getStartedSprint(this.project.sprints))}} / {{getTotalPoints(getStartedSprint(this.project.sprints))}}
             </p>
            
         </div>

@@ -4,6 +4,8 @@ package com.example.scrummanager.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +32,7 @@ public class Project {
 
     @OneToMany (fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
+    @JsonManagedReference
     private List<Sprint> sprints;
 
     public Project() {
@@ -39,7 +42,7 @@ public class Project {
     this.title = title;
     this.description = description;
     this.sprints = new ArrayList<>(); // initialize as an empty list
-}
+    }
 
     public Project(String title, String description, List<Sprint> sprints) {
         this.title = title;

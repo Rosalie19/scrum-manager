@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.scrummanager.model.Sprint;
-import com.example.scrummanager.model.Ticket;
 import com.example.scrummanager.repository.SprintRepository;
 
 
@@ -45,7 +43,6 @@ public class SprintController {
             if (sprints.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-
             return new ResponseEntity<>(sprints, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -73,19 +70,6 @@ public class SprintController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/{id}/tickets")
-    public ResponseEntity<Sprint> addTicketToSprint(@PathVariable("id") long id, @RequestBody Ticket ticket) {
-        Optional<Sprint> sprintData = sprintRepository.findById(id);
-
-        if (sprintData.isPresent()) {
-            Sprint _sprint = sprintData.get();
-            _sprint.getTickets().add(ticket);
-            sprintRepository.save(_sprint);
-            return new ResponseEntity<>(_sprint, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-}
 
     @PutMapping("/{id}")
     public ResponseEntity<Sprint> updateSprint(@PathVariable("id") long id, @RequestBody Sprint sprint) {
@@ -96,7 +80,6 @@ public class SprintController {
             _sprint.setBacklog(sprint.getBacklog());
             _sprint.setStarted(sprint.getStarted());
             _sprint.setTickets(sprint.getTickets());
-            _sprint.setProject(sprint.getProject());
             return new ResponseEntity<>(sprintRepository.save(_sprint), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -111,16 +94,5 @@ public class SprintController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteAllSprints() {
-        try {
-            sprintRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
     }
 }
